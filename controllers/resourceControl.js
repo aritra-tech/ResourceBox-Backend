@@ -22,7 +22,7 @@ class resourceController {
         }
     }
     static getAllResources = async(req,res) => {
-        const resources = await Resources.find({})
+        const resources = await Resources.find(req.query)
         res.json({resources})
     }
 }
