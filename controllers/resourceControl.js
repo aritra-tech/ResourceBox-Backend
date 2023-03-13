@@ -4,6 +4,10 @@ class resourceController {
 
     static addResource = async(req,res) => {
         const{type,resourceName,resourceDescription,resourceLink} = req.body
+        const resource = await Resources.findOne({ resourceName: resourceName})
+        if(resource){
+            return res.status(400).json({message: "Resource already exist"})
+        }
         if(type && resourceName && resourceDescription){
             try{
                 const resource = new Resources({
