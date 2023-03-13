@@ -4,7 +4,6 @@ class resourceController {
 
     static addResource = async(req,res) => {
         const{type,resourceName,resourceDescription,resourceLink} = req.body
-
         if(type && resourceName && resourceDescription){
             try{
                 const resource = new Resources({
@@ -21,6 +20,10 @@ class resourceController {
                 res.send({message: `Something went wrong! ${error}`});
             }
         }
+    }
+    static getAllResources = async(req,res) => {
+        const resources = await Resources.find({})
+        res.json({resources})
     }
 }
 module.exports = resourceController
