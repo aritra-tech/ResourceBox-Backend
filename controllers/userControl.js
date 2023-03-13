@@ -36,10 +36,40 @@ class userController {
               });
             }
     
-            } else {
+            } 
+            else {
                 res.send({status: "failed", message: "All fields are required!"});
             }
-        }    
+        
+    }
+
+    static userLogin = async (req,res) => {
+        try{
+            const {email,password} = req.body
+            if(!email || !password){
+                return res.send({
+                    message: "All fields are required"
+                })
+            }
+
+            const user = await User.findOne({email: email})
+            if(!user){
+                return res.send({message: "You haven't registered yet"})
+            }
+
+            const sameUser = await bcrypt.compare(password,user.password)
+            if(!sameUser){
+                return res.send({message: "Invalid Email & Password"})
+            }
+            const token = jwt.sign({userID: user._id}, process.env.JWT_SECRET_KEY, {expiresIn: "7d"})
+            res.send({message: "Successfully logged in", token: token});
+        }
+        catch(err){
+            console.log(err)
+            return res.send({message: "Unable to login!"})
+        }
+    }
+
  }
 module.exports = userController
 
